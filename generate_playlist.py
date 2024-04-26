@@ -15,11 +15,16 @@ def read_m3u_playlist(source):
         with open(source, 'r') as f:
             content = f.read()
 
-    pattern = re.compile(r'#EXTINF:(.*?)(?: tvg-logo="(.*?)")?(?: group-title="(.*?)")?,(.*?)\n(.*?)\n')
+    # Debugging: Print the content to verify it's being read correctly
+    print("Content fetched:", content[:500])  # Print the first 500 characters of the content
+
+    pattern = re.compile(r'#EXTINF:(.*?)(?: tvg-logo="(.*?)")?(?: group-title="(.*?)")?,(.*?)\n(.*?)\n', re.DOTALL)
     matches = pattern.findall(content)
+    print("Matches found:", len(matches))  # Number of matches found
 
     for match in matches:
         duration, logo, group, channel_name, url = match
+        print("Processing:", url)  # Print each URL being processed
         if '.m3u8' in url:
             playlist.append({'logo': logo, 'group': group, 'channel_name': channel_name, 'url': url})
     return playlist
