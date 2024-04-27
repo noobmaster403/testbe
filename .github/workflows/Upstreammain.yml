@@ -1,0 +1,35 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs at the first minute of every hour
+  workflow_dispatch:  # Allows you to manually trigger the workflow from the GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          ref: 'Main'
+          fetch-depth: 0  # Ensures all branches are fetched
+
+      - name: Setup Git config
+        run: |
+          git config user.name 'GitHub Action'
+          git config user.email 'action@github.com'
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/FunctionError/testbe.git
+
+      - name: Fetch latest changes from upstream
+        run: git fetch upstream
+
+      - name: Checkout Main branch
+        run: git checkout Main  # Ensures the local Main branch is ready
+
+      - name: Merge upstream changes
+        run: |
+          git merge upstream/Main --ff-only  # Ensures a fast-forward merge
+          git push origin Main  # Pushes the changes to your fork on GitHub
