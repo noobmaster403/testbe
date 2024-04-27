@@ -3,7 +3,7 @@ name: Sync Fork with Upstream
 on:
   schedule:
     - cron: '0 * * * *'  # Runs at the first minute of every hour
-  workflow_dispatch:  # Allows you to manually trigger the workflow from the GitHub UI
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -31,5 +31,5 @@ jobs:
 
       - name: Merge upstream changes
         run: |
-          git merge upstream/main --ff-only  # Ensures a fast-forward merge
+          git merge upstream/main --no-ff  # Allows a merge commit
           git push origin main  # Pushes the changes to your fork on GitHub
